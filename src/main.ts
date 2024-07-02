@@ -7,22 +7,31 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
+const textureLoader = new THREE.TextureLoader();
+const ringTexture = textureLoader.load(
+  "asphalt_textura.avif",
+  function (texture) {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(100, 100);
+  }
+);
+
+const geometry = new THREE.PlaneGeometry(100, 100);
+const material = new THREE.MeshBasicMaterial({ map: ringTexture });
+const plane = new THREE.Mesh(geometry, material);
+
+scene.add(plane);
 
 camera.position.z = 5;
+camera.position.y = 10;
+camera.rotation.x = Math.PI / 4;
 
 function animate() {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
   renderer.render(scene, camera);
 }
 
